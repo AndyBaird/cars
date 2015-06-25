@@ -23,12 +23,13 @@ var src = {
   allJs: './src/**/*.js',
   allFont: './src/**/*.{ttf,woff,otf,eot}',
   allScss: './src/**/*.scss',
-  allImg: './src/**/*.{jpg,png,svg,gif,ico}'
+  allImg: './src/**/*.{jpg,png,svg,gif,ico}',
+  allData: './src/**/*.data'
 };
 
 // The default task is what runs when you type 'gulp' in the terminal
 gulp.task('default', ['clean'], function () {
-  return gulp.start('html', 'img', 'font', 'js:views', 'js:vendor', 'js', 'scss', 'watch', 'reload', 'serve');
+  return gulp.start('html','data', 'img', 'font', 'js:views', 'js:vendor', 'js', 'scss', 'watch', 'reload', 'serve');
 });
 
 // Serve is a name I made up. You could call it 'dostuff' or whatever.
@@ -63,6 +64,10 @@ gulp.task('watch', function () {
     gulp.start('img');
   });
   
+  watch(src.allData, function () {
+    gulp.start('data');
+  });
+  
   watch(src.allFont, function () {
     gulp.start('font');
   });
@@ -83,6 +88,7 @@ gulp.task('deploy', function() {
 // Adding the CSS task
 gulp.task('scss', function () {
   return gulp.src('./src/css/main.scss')
+    .on('error', swallowError)
     .pipe(sass().on('error', sass.logError))
     .pipe(rename('main.css'))
     .pipe(autoprefixer({
@@ -94,7 +100,10 @@ gulp.task('scss', function () {
 
 // Build our JavaScript files using browserify
 gulp.task('js', function () {
-  return browserify('./src/js/init.js', { debug: true })
+  var stream;
+  
+  try {
+    stream = browserify('./src/js/init.js', { debug: true })
     .transform('bulkify')
     .transform({ global: true }, 'uglifyify')
     .external('views')
@@ -102,7 +111,14 @@ gulp.task('js', function () {
     .external('underscore')
     .external('backbone')
     .external('parsleyjs')
-    .bundle()
+    .bundle();
+  } catch (ex) {
+    console.error(ex);
+    return;
+  }
+  
+  return stream
+     .on('error', swallowError)
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
@@ -153,6 +169,12 @@ gulp.task('img', function () {
     .pipe(gulp.dest('./dist'));
 });
 
+// Move any data to the dist folder
+gulp.task('data', function () {
+  return gulp.src(src.allData)
+    .pipe(gulp.dest('./dist'));
+});
+
 // Move any fonts to the dist folder
 gulp.task('font', function () {
   return gulp.src(src.allFont)
@@ -163,3 +185,9 @@ gulp.task('font', function () {
 gulp.task('clean', function (cb) {
   del('./dist', cb);
 });
+
+// Prevent gulp from crashing and leaving a running Node process behind
+function swallowError (error) {
+  console.log(error.toString());
+  this.emit('end');
+}
