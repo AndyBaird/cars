@@ -29,7 +29,7 @@ var src = {
 
 // The default task is what runs when you type 'gulp' in the terminal
 gulp.task('default', ['clean'], function () {
-  return gulp.start('html','data', 'img', 'font', 'js:views', 'js:vendor', 'js', 'scss', 'watch', 'reload', 'serve');
+  return gulp.start('html', 'data', 'img', 'font', 'js:views', 'js:vendor', 'js', 'scss', 'watch', 'reload', 'serve');
 });
 
 // Serve is a name I made up. You could call it 'dostuff' or whatever.
