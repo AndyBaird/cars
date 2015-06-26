@@ -1,0 +1,10 @@
+<h1>Car Details</h1>
+
+<ul class="car-detail">
+  <% _.pairs(m).forEach(function (pair) { %>
+    <li>
+      <%- pair[0] %>
+      <%- pair[1] %>
+    </li>
+  <% }) %>
+</ul>
