@@ -29,19 +29,22 @@ var router = require('./router');
    return carsCSV
      .split('\n')
      .map(function (carRecord) {
-        // console.log(carRecord);
         var cells = carRecord.split(',');
         return {
           make: cells[46],
           model: cells[47],
           mpgData: cells[48],
-          year: cells[63]
+          year: cells[63],
+          trany: cells[57],
+          cylinders: cells[22]
         };
         
       });
       
   }
     function renderCars(carsArray) {
+    //remove first line of names from DOM
+    carsArray.shift();
     var carsTemplate = views['cars-template'];
     var templateFn = _.template(carsTemplate, { variable: 'm' });
     var carsHTML = templateFn({ cars: carsArray });
