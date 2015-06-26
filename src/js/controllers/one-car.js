@@ -1,5 +1,6 @@
 'use strict';
 
+var c3 = require('c3');
 var $ = require('jquery');
 var _ = require('underscore');
 var views = require('views');
@@ -23,11 +24,13 @@ router.route('cars/:id', function (carId){
         counter += 1;
         return {
           id: counter,
-          make: cells[46],
-          model: cells[47],
-          year: cells[63],
-          trany: cells[57],
-          cylinders: cells[22]
+          "Make": cells[46],
+          "Model": cells[47],
+          "Year": cells[63],
+          "Transmission": cells[57],
+          "Cylinders": cells[22],
+          "City MPG": cells[4],
+          "Highway MPG": cells[34]
         };
 
       });
@@ -41,5 +44,15 @@ router.route('cars/:id', function (carId){
     var carHTML = templateFn(car);
     
     $('.main-container').html(carHTML);
-  } 
+
+      c3.generate({
+        bindto: '#chart',
+        data: {
+          columns: [
+            ['data1', 30, 200, 100, 400, 150, 250],
+            ['data2', 50, 20, 10, 40, 15, 25]
+          ]
+        }
+    });
+    }
 });
