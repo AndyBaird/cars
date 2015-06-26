@@ -21,17 +21,32 @@ var router = require('./router');
     url: 'data/cars.data',
     method: 'GET'
   })
-  // .done(function (data){
-  //   console.log(data);
-
     
   .then(parseCarsCSV)
-  // .then(renderCars);
+  .then(renderCars);
   
   function parseCarsCSV(carsCSV){
-   console.log (carsCSV.split('\n'));
-   
+   return carsCSV
+     .split('\n')
+     .map(function (carRecord) {
+        // console.log(carRecord);
+        var cells = carRecord.split(',');
+        return {
+          make: cells[46],
+          model: cells[47],
+          mpgData: cells[48],
+          year: cells[63]
+        };
+        
+      });
+      
+  }
+    function renderCars(carsArray) {
+    var carsTemplate = views['cars-template'];
+    var templateFn = _.template(carsTemplate, { variable: 'm' });
+    var carsHTML = templateFn({ cars: carsArray });
+    
+    $('.main-container').html(carsHTML);
   }
   
   
-// });
