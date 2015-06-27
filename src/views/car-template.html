@@ -1,12 +1,14 @@
-<h1 class="page-title">Car Details</h1>
 
-<ul class="car-detail">
-  <% _.pairs(m).forEach(function (pair) { %>
-    <li>
-      <%- pair[0] %>
-      <%- pair[1] %>
-    </li>
-  <% }) %>
-</ul>
-<div id = "chart">
-  </div>
+<h1 class="page-title">Details for <%- m.Year %> <%- m.Make %> <%- m.Model %></h1>  
+  <ul class="car-detail">
+    <% _.pairs(m).forEach(function (pair) { %>
+      <li>
+        <%- pair[0] %>
+        <%- pair[1] %>  
+       </li>
+    <% }) %>
+  </ul>
+    <div class = "chart-wrapper">
+      <div id = "chart">
+      </div>
+    </div>

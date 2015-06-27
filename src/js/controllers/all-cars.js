@@ -27,7 +27,6 @@ router.route('', 'cars', function (){
           id: counter,
           make: cells[46],
           model: cells[47],
-          mpgData: cells[48],
           year: cells[63],
           trany: cells[57],
           cylinders: cells[22]
