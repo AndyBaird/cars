@@ -41,10 +41,10 @@ router.route('cars/:id', function (carId){
       var carTemplate = views['car-template'];
       var templateFn = _.template(carTemplate, { variable: 'm' });
       var carHTML = templateFn(car);
-      
-      renderChart(car, carsArray);
   
       $('.main-container').html(carHTML);
+            renderChart(car, carsArray);
+   }  
   
       function renderChart(car, carsArray) {
         var allCarsMPG = _.pluck(carsArray, 'HighwayMPG');         
@@ -55,40 +55,29 @@ router.route('cars/:id', function (carId){
             numArray.push(parseInt(str[i]));
           return numArray;
         }
-        
         var numAllCarsMPG = stringToNum(allCarsMPG);
-        
         //eliminate any value under 1
         var parsedAllCarsMPG = _.filter(numAllCarsMPG, function(num){return num > 0;});
-        
-
-         
-         // var total = 0;
-          // $.each(parsedAllCarsMPG,function() {
-          //     total += this;
-          // });
-             
-          var totalAllCarsMPG = parsedAllCarsMPG 
-          .reduce(function(x, y){
-            return x + y;
+        //find the avg MPG for all vehicles in the collection  
+        var totalAllCarsMPG = parsedAllCarsMPG 
+        .reduce(function(x, y){
+          return x + y;
+        });
+        var avgAllcarsMPG = totalAllCarsMPG / parsedAllCarsMPG.length;
+           
+          c3.generate({
+            bindto: '.chart',
+            data: {
+              columns: [
+                ['avgAllcarsMPG', avgAllcarsMPG],
+                ['HighwayMPG', car.HighwayMPG]
+              ],
+              type : 'pie'
+            },
+            color: {
+              pattern: ['#3FBEBB', '#FF5843', '#39B54A']
+            }
           });
-          console.log(totalAllCarsMPG);
-      };
-        
- 
-        
-        // c3.generate({
-        //   bindto: '#chart',
-        //   data: {
-        //     columns: [
-        //       ['allCarsMPG', allCarsMPG],
-        //     ],
-        //     type : 'pie'
-        //   },
-        //   color: {
-        //     pattern: ['#3FBEBB', '#FF5843', '#39B54A']
-        //   }
-        // });
-      // }
-   }
+         
+      }
 });

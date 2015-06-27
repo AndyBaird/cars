@@ -41,5 +41,7 @@ router.route('', 'cars', function (){
       var carsHTML = templateFn({ cars: carsArray });
       
       $('.main-container').html(carsHTML);
+    
+    
     }
 });
