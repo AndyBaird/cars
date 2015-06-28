@@ -5,37 +5,12 @@ var $ = require('jquery');
 var _ = require('underscore');
 var views = require('views');
 var router = require('../router');
+var loadCars = require('../services/cars-service');
+
 
 router.route('cars/:id', function (carId){
-  $.ajax({
-    url: 'data/cars.data',
-    method: 'GET'
-  })
+ loadCars().then(renderCar);
   
-  .then(parseCarsCSV)
-  .then(renderCar);
-  
-  function parseCarsCSV(carsCSV){
-   var counter = 0;
-   return carsCSV
-     .split('\n')
-     .map(function (carRecord) {
-        var cells = carRecord.split(',');
-        counter += 1;
-        return {
-          id: counter,
-          Make: cells[46],
-          Model: cells[47],
-          Year: cells[63],
-          Transmission: cells[57],
-          Cylinders: cells[22],
-          CityMPG: cells[4],
-          HighwayMPG: cells[34]
-        };
-
-      });
-    }
-
    function renderCar(carsArray) {
       var car = _.findWhere(carsArray, { id: parseInt(carId) });
       var carTemplate = views['car-template'];
@@ -47,7 +22,7 @@ router.route('cars/:id', function (carId){
    }  
   
       function renderChart(car, carsArray) {
-        var allCarsMPG = _.pluck(carsArray, 'HighwayMPG');         
+        var allCarsMPG = _.pluck(carsArray, 'highwayMPG');         
         
         function stringToNum(str){
           var numArray = [];
@@ -69,10 +44,10 @@ router.route('cars/:id', function (carId){
             bindto: '.chart',
             data: {
               columns: [
-                ['avgAllcarsMPG', avgAllcarsMPG],
-                ['HighwayMPG', car.HighwayMPG]
+                ['Avg Highway MPG of all Cars', avgAllcarsMPG],
+                ['This cars Highway MPG', car.highwayMPG]
               ],
-              type : 'pie'
+              type : 'bar'
             },
             color: {
               pattern: ['#3FBEBB', '#FF5843', '#39B54A']

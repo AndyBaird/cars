@@ -4,35 +4,12 @@ var $ = require('jquery');
 var _ = require('underscore');
 var views = require('views');
 var router = require('../router');
+var loadCars = require('../services/cars-service');
 
 router.route('', 'cars', function (){ 
-
-  $.ajax({
-    url: 'data/cars.data',
-    method: 'GET'
-  })
-
-    
-  .then(parseCarsCSV)
-  .then(renderCars);
+  loadCars().then(renderCars);
   
-  function parseCarsCSV(carsCSV){
-   var counter = 0;
-   return carsCSV
-     .split('\n')
-     .map(function (carRecord) {
-        var cells = carRecord.split(',');
-        counter += 1;
-        return {
-          id: counter,
-          make: cells[46],
-          model: cells[47],
-          year: cells[63],
-          trany: cells[57],
-          cylinders: cells[22]
-        };
-      }); 
-  }
+
     function renderCars(carsArray) {
       //remove first line of names from DOM
       carsArray.shift();

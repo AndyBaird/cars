@@ -1,10 +1,12 @@
 
 <h1 class="page-title">Details for <%- m.Year %> <%- m.Make %> <%- m.Model %></h1>  
+  <a class="home-btn" href="#cars">Home</a>
   <ul class="car-detail">
     <% _.pairs(m).forEach(function (pair) { %>
       <li>
         <%- pair[0] %>
         <%- pair[1] %>  
+          
        </li>
     <% }) %>
   </ul>
